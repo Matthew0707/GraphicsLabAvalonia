@@ -72,3 +72,4 @@
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.pdb
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.genruntimeconfig.cache
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/ref/GraphicsLabAvalonia.dll
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.sourcelink.json
