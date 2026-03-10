@@ -5,9 +5,6 @@
         Background="White"
         Width="600" Height="600">
     
-   
        <Canvas Name="DrawingCanvas" Background="Green" />
-   
-    
     
 </Window>

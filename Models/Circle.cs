@@ -4,33 +4,45 @@ using Avalonia.Media;
 
 namespace GraphicsLabAvalonia.Models;
 
+// Class representing a circle shape
 public class Circle : Shape
 {
-    
-    private int _radius;
-    public int Radius
+    // Diameter of the circle
+    private int _diameter;
+
+    public int Diameter
     {
-        get { return _radius; }
+        get { return _diameter; }
         set
         {
+            // Validate that diameter is positive
             if (value <= 0)
-                throw new ArgumentException("Radius must be positive");
+                throw new ArgumentException("Диаметр должен быть больше нуля");
                 
-            _radius = value;
-          
+            _diameter = value;
         }
     }
-    public Circle(int x, int y, int r) : base(x, y)
+
+    // Constructor initializes position and diameter
+    public Circle(int x, int y, int d) : base(x, y)
     {
-        Radius = r;
+        Diameter = d;
     }
-    
+
+    // Draw circle using Avalonia DrawingContext
     public override void Draw(DrawingContext context)
     {
-        Console.WriteLine($"Рисую: X={X}, Y={Y}, W={Radius} круг");
-        
         var pen = new Pen(Brushes.Red, 2);
-        var rect = new Rect(X, Y, Radius, Radius);
-        context.DrawEllipse(brush:Brushes.Black, pen, rect);
+
+        // Rectangle that bounds the ellipse (circle)
+        var rect = new Rect(X, Y, Diameter, Diameter);
+
+        context.DrawEllipse(brush: Brushes.Black, pen, rect);
+    }
+
+    // Returns text description of the circle
+    public override string GetDescription()
+    {
+        return $"Круг (X:{X}, Y:{Y}; Диаметр:{Diameter})";
     }
 }

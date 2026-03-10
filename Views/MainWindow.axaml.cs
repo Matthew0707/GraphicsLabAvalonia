@@ -1,54 +1,60 @@
-
 using System;
 using Avalonia;
 using Avalonia.Controls;
-
 using Avalonia.Media.Imaging;
 using GraphicsLabAvalonia.Models;
 
 namespace GraphicsLabAvalonia.Views;
 
+// Main window of the application
 public partial class MainWindow : Window
 {
+    // Collection that stores all shapes to be drawn
     private ShapeList _shapes;
     
     public MainWindow()
     {
         InitializeComponent();
+
+        // Create shape container
         _shapes = new ShapeList();
+
+        // Add different shapes to the list
         _shapes.Add(new Rectangle(50, 50, 50, 100));
         _shapes.Add(new Square(4, 200, 50));
         _shapes.Add(new Line(200, 200, 300, 120));
         _shapes.Add(new Ellipse(50, 50, 50, 100));
         _shapes.Add(new Circle(120, 50, 50));
         _shapes.Add(new Triangle(30,30, 10, 60, 50,0,10, 10));
-            //Loaded += (s, e) => DrawShapes();
-            SizeChanged += (s, e) => DrawShapes();
+
+        // Redraw shapes when window size changes
+        SizeChanged += (s, e) => DrawShapes();
     }
     
+    // Method responsible for rendering all shapes
     private void DrawShapes()
     {
-        
-            // Получаем Canvas
-            var canvas = this.FindControl<Canvas>("DrawingCanvas");
-            if (canvas == null)
-            {
-                throw new ArgumentNullException("Канвас не найден, перепроверьте имя");
-            }
+        // Get Canvas control from XAML
+        var canvas = this.FindControl<Canvas>("DrawingCanvas");
+        if (canvas == null)
+        {
+            throw new ArgumentNullException("Канвас не найден, перепроверьте имя");
+        }
             
-        // Создаем временное изображение для рисования
+        // Get current canvas size
         var width = (int)canvas.Bounds.Width;
         var height = (int)canvas.Bounds.Height;
         
-        // Создаем RenderTargetBitmap для рисования
+        // Create off-screen bitmap for drawing
         var bitmap = new RenderTargetBitmap(new PixelSize(width, height));
         
+        // Create drawing context and draw all shapes
         using (var ctx = bitmap.CreateDrawingContext())
         {
-                _shapes.DrawAll(ctx);
+            _shapes.DrawAll(ctx);
         }
         
-        // Создаем Image контрол и кладем на Canvas
+        // Create Image control to display rendered bitmap
         var image = new Image
         {
             Source = bitmap,
@@ -56,6 +62,7 @@ public partial class MainWindow : Window
             Height = height
         };
         
+        // Clear canvas and place the new image
         canvas.Children.Clear();
         canvas.Children.Add(image);
     }
