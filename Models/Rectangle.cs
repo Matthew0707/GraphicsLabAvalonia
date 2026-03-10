@@ -5,22 +5,12 @@ using Avalonia.Media;
 
 namespace GraphicsLabAvalonia.Models;
 
-public class Rectangle : Shape
+public class Rectangle : Square
 {
-    private int _width;
+   
     private int _height;
 
-    public int Width
-    {
-        get { return _width; }
-        set
-        {
-            if (value > 0)
-                _width = value;
-            else
-                throw new ArgumentOutOfRangeException(nameof(value), "Width must be greater than zero");
-        }
-    }
+    
     public int Height
     {
         get { return _height; }
@@ -34,7 +24,7 @@ public class Rectangle : Shape
     }
 
     
-    public Rectangle(int x, int y, int width, int height) : base(x, y)
+    public Rectangle(int x, int y, int width, int height) : base(x, y, width)
     {
         Width = width;
         Height = height;

@@ -1,5 +1,5 @@
 using Avalonia.Media;
-using Avalonia;
+
 
 namespace GraphicsLabAvalonia.Models;
 
@@ -20,6 +20,5 @@ public abstract class Shape
     {
         return $"{GetType().Name}({X}, {Y})";
     }
-    
     
 }

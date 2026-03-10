@@ -22,7 +22,7 @@ public partial class MainWindow : Window
         _shapes.Add(new Ellipse(50, 50, 50, 100));
         _shapes.Add(new Circle(120, 50, 50));
         _shapes.Add(new Triangle(30,30, 10, 60, 50,0,10, 10));
-            Loaded += (s, e) => DrawShapes();
+            //Loaded += (s, e) => DrawShapes();
             SizeChanged += (s, e) => DrawShapes();
     }
     
