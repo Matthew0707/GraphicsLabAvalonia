@@ -25,8 +25,8 @@ public partial class MainWindow : Window
         _shapes.Add(new Line(200, 200, 300, 120));
         _shapes.Add(new Ellipse(50, 50, 50, 100));
         _shapes.Add(new Circle(120, 50, 50));
-        _shapes.Add(new Triangle(30,30, 10, 60, 50,0,10, 10));
-
+        _shapes.Add(new Triangle(230,230, 0,0, 0, 10, 10, 0));
+        _shapes.Add(new GeometryPol(200,300, 30,30, 70, 70, 40, 20));
         // Redraw shapes when window size changes
         SizeChanged += (s, e) => DrawShapes();
     }

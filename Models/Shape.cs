@@ -6,8 +6,8 @@ namespace GraphicsLabAvalonia.Models;
 public abstract class Shape
 {
     // Position of shape
-    public int X { get; set; }
-    public int Y { get; set; }
+    public int X { get;}
+    public int Y { get;}
 
     // Base constructor
     protected Shape(int x, int y)
