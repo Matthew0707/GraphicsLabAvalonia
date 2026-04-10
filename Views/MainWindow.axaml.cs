@@ -1,60 +1,256 @@
+// GraphicsLabAvalonia/Views/MainWindow.xaml.cs
 using System;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using GraphicsLabAvalonia.Factories;
 using GraphicsLabAvalonia.Models;
 
 namespace GraphicsLabAvalonia.Views;
 
-// Main window of the application
+/// <summary>
+/// Main window of the graphics editor application
+/// Implements drag-and-drop shape creation with preview
+/// </summary>
 public partial class MainWindow : Window
 {
-    // Collection that stores all shapes to be drawn
+    // Container for all shapes
     private ShapeList _shapes;
+    
+    // Factory manager for creating shapes dynamically
+    private ShapeFactoryManager _factoryManager;
+    
+    // Current drawing state
+    private string _currentShapeType;
+    private bool _isDrawing;
+    private Point _startPoint;
+    private Point _currentPoint;
     
     public MainWindow()
     {
         InitializeComponent();
-
-        // Create shape container
+        
+        // Initialize collections
         _shapes = new ShapeList();
-
-        // Add different shapes to the list
-        _shapes.Add(new Rectangle(50, 50, 50, 100));
-        _shapes.Add(new Square(4, 200, 50));
-        _shapes.Add(new Line(200, 200, 300, 120));
-        _shapes.Add(new Ellipse(50, 50, 50, 100));
-        _shapes.Add(new Circle(120, 50, 50));
-        _shapes.Add(new Triangle(230,230, 0,0, 0, 10, 10, 0));
-        _shapes.Add(new GeometryPol(200,300, 30,30, 70, 70, 40, 20));
-        // Redraw shapes when window size changes
+        
+        // Initialize and configure factory manager
+        InitializeFactoryManager();
+        
+        // Set up UI event handlers
+        ShapeTypeListBox.SelectionChanged += OnShapeTypeChanged;
+        
+        // Register window events
         SizeChanged += (s, e) => DrawShapes();
+        
+        // Initial draw
+        DrawShapes();
     }
     
-    // Method responsible for rendering all shapes
-    private void DrawShapes()
+    /// <summary>
+    /// Initialize the factory manager and register all available shape factories
+    /// </summary>
+    private void InitializeFactoryManager()
     {
-        // Get Canvas control from XAML
-        var canvas = this.FindControl<Canvas>("DrawingCanvas");
-        if (canvas == null)
+        _factoryManager = new ShapeFactoryManager();
+        
+        // Register all available shape factories
+        _factoryManager.RegisterFactory(new CircleFactory());
+        _factoryManager.RegisterFactory(new RectangleFactory());
+        _factoryManager.RegisterFactory(new SquareFactory());
+        _factoryManager.RegisterFactory(new LineFactory());
+        _factoryManager.RegisterFactory(new EllipseFactory());
+        _factoryManager.RegisterFactory(new TriangleFactory());
+        
+        // Populate list box with available shape types
+        var shapeTypes = _factoryManager.GetAvailableShapeTypes().ToList();
+        ShapeTypeListBox.ItemsSource = shapeTypes;
+        
+        if (shapeTypes.Any())
+            ShapeTypeListBox.SelectedIndex = 0;
+    }
+    
+    /// <summary>
+    /// Handle shape type selection change
+    /// </summary>
+    private void OnShapeTypeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (ShapeTypeListBox.SelectedItem is string shapeType)
         {
-            throw new ArgumentNullException("Канвас не найден, перепроверьте имя");
+            _currentShapeType = shapeType;
+            CurrentShapeInfo.Text = $"Выбрана: {shapeType}";
         }
-            
-        // Get current canvas size
+    }
+    
+    /// <summary>
+    /// Handle canvas pointer press - start drawing
+    /// </summary>
+    private void OnCanvasPointerPressed(object sender, PointerPressedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(_currentShapeType))
+        {
+            CurrentShapeInfo.Text = "Сначала выберите фигуру!";
+            return;
+        }
+        
+        // Only handle left mouse button
+        var properties = e.GetCurrentPoint(this).Properties;
+        if (!properties.IsLeftButtonPressed)
+            return;
+        
+        // Start drawing
+        _isDrawing = true;
+        _startPoint = e.GetPosition(DrawingCanvas);
+        _currentPoint = _startPoint;
+        
+        // Capture mouse to receive events even outside canvas
+        e.Pointer.Capture(DrawingCanvas);
+        
+        CurrentShapeInfo.Text = $"Рисование: {_currentShapeType}";
+    }
+    
+    /// <summary>
+    /// Handle canvas pointer moved - update preview
+    /// </summary>
+    private void OnCanvasPointerMoved(object sender, PointerEventArgs e)
+    {
+        if (!_isDrawing) return;
+        
+        _currentPoint = e.GetPosition(DrawingCanvas);
+        
+        // Redraw everything including preview
+        DrawShapesWithPreview();
+    }
+    
+    /// <summary>
+    /// Handle canvas pointer released - create final shape
+    /// </summary>
+    private void OnCanvasPointerReleased(object sender, PointerReleasedEventArgs e)
+    {
+        if (!_isDrawing) return;
+        
+        _isDrawing = false;
+        e.Pointer.Capture(null);
+        
+        // Create the final shape
+        try
+        {
+            var shape = CreateShapeFromPoints(_startPoint, _currentPoint);
+            if (shape != null)
+            {
+                _shapes.Add(shape);
+                CurrentShapeInfo.Text = $"Создана: {_currentShapeType}";
+            }
+        }
+        catch (Exception ex)
+        {
+            CurrentShapeInfo.Text = $"Ошибка: {ex.Message}";
+        }
+        
+        // Draw final result
+        DrawShapes();
+    }
+    
+    /// <summary>
+    /// Create shape from start and current points based on shape type
+    /// </summary>
+    private Shape CreateShapeFromPoints(Point start, Point end)
+    {
+        var parameters = CalculateShapeParameters(start, end);
+        return _factoryManager.CreateShape(_currentShapeType, parameters);
+    }
+    
+    /// <summary>
+    /// Calculate parameters for different shape types
+    /// </summary>
+    private int[] CalculateShapeParameters(Point start, Point end)
+    {
+        int x1 = (int)Math.Min(start.X, end.X);
+        int y1 = (int)Math.Min(start.Y, end.Y);
+        int x2 = (int)Math.Max(start.X, end.X);
+        int y2 = (int)Math.Max(start.Y, end.Y);
+        
+        int width = x2 - x1;
+        int height = y2 - y1;
+        
+        switch (_currentShapeType)
+        {
+            case "Line":
+                return new[] { (int)start.X, (int)start.Y, (int)end.X, (int)end.Y };
+                
+            case "Rectangle":
+            case "Ellipse":
+                return new[] { x1, y1, width, height };
+                
+            case "Circle":
+                // Circle uses diameter (minimum of width and height for proper circle)
+                int diameter = Math.Min(width, height);
+                return new[] { x1, y1, diameter };
+                
+            case "Square":
+                // Square uses same size for both dimensions
+                int side = Math.Min(width, height);
+                return new[] { x1, y1, side };
+                
+            case "Triangle":
+                // Create triangle with base at bottom
+                return new[]
+                {
+                    x1, y2,                    // Bottom-left
+                    x2, y2,                    // Bottom-right
+                    x1 + width / 2, y1         // Top-center
+                };
+                
+            default:
+                throw new ArgumentException($"Unknown shape type: {_currentShapeType}");
+        }
+    }
+    
+    /// <summary>
+    /// Create preview shape from current drag points
+    /// </summary>
+    private Shape CreatePreviewShape()
+    {
+        return CreateShapeFromPoints(_startPoint, _currentPoint);
+    }
+    
+    /// <summary>
+    /// Draw all shapes including preview
+    /// </summary>
+    private void DrawShapesWithPreview()
+    {
+        var canvas = this.FindControl<Canvas>("DrawingCanvas");
+        if (canvas == null) return;
+        
         var width = (int)canvas.Bounds.Width;
         var height = (int)canvas.Bounds.Height;
         
-        // Create off-screen bitmap for drawing
+        if (width <= 0 || height <= 0) return;
+        
         var bitmap = new RenderTargetBitmap(new PixelSize(width, height));
         
-        // Create drawing context and draw all shapes
         using (var ctx = bitmap.CreateDrawingContext())
         {
+            // Draw existing shapes
             _shapes.DrawAll(ctx);
+            
+            // Draw preview shape with dashed/different style
+            if (_isDrawing)
+            {
+                try
+                {
+                    var previewShape = CreatePreviewShape();
+                    DrawPreviewShape(ctx, previewShape);
+                }
+                catch
+                {
+                    // Ignore preview drawing errors
+                }
+            }
         }
         
-        // Create Image control to display rendered bitmap
         var image = new Image
         {
             Source = bitmap,
@@ -62,7 +258,70 @@ public partial class MainWindow : Window
             Height = height
         };
         
-        // Clear canvas and place the new image
+        canvas.Children.Clear();
+        canvas.Children.Add(image);
+    }
+    
+    /// <summary>
+    /// Draw preview shape with distinctive style
+    /// </summary>
+    private void DrawPreviewShape(DrawingContext context, Shape shape)
+    {
+        // Save current state
+        using (context.PushOpacity(0.5))
+        {
+            // Draw shape with semi-transparency for preview
+            shape.Draw(context);
+        }
+        
+        // Draw bounding box indicators
+        DrawBoundingBox(context);
+    }
+    
+    /// <summary>
+    /// Draw bounding box during drag operation
+    /// </summary>
+    private void DrawBoundingBox(DrawingContext context)
+    {
+        // Create dashed pen for bounding box
+        var dashStyle = new DashStyle(new[] { 5.0, 5.0 }, 0);
+        var pen = new Pen(Brushes.Blue, 1, dashStyle);
+    
+        int x = (int)Math.Min(_startPoint.X, _currentPoint.X);
+        int y = (int)Math.Min(_startPoint.Y, _currentPoint.Y);
+        int width = (int)Math.Abs(_currentPoint.X - _startPoint.X);
+        int height = (int)Math.Abs(_currentPoint.Y - _startPoint.Y);
+    
+        context.DrawRectangle(pen, new Rect(x, y, width, height));
+    }
+    
+    /// <summary>
+    /// Draw all shapes (without preview)
+    /// </summary>
+    private void DrawShapes()
+    {
+        var canvas = this.FindControl<Canvas>("DrawingCanvas");
+        if (canvas == null) return;
+        
+        var width = (int)canvas.Bounds.Width;
+        var height = (int)canvas.Bounds.Height;
+        
+        if (width <= 0 || height <= 0) return;
+        
+        var bitmap = new RenderTargetBitmap(new PixelSize(width, height));
+        
+        using (var ctx = bitmap.CreateDrawingContext())
+        {
+            _shapes.DrawAll(ctx);
+        }
+        
+        var image = new Image
+        {
+            Source = bitmap,
+            Width = width,
+            Height = height
+        };
+        
         canvas.Children.Clear();
         canvas.Children.Add(image);
     }

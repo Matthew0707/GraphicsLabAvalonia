@@ -1,37 +1,47 @@
+// GraphicsLabAvalonia/Models/Triangle.cs
+using Avalonia;
 using Avalonia.Media;
-using Avalonia; 
 
 namespace GraphicsLabAvalonia.Models;
 
-// Triangle defined by three points
+/// <summary>
+/// Triangle defined by three points
+/// </summary>
 public class Triangle : Shape
 {
-    public Point[] Points;
-    // Constructor initializes vertex coordinates
-    public Triangle(int x, int y, int a1, int a2, int b1, int b2, int c1, int c2) : base(x, y)
+    public Point[] Points { get; set; }
+    
+    // Constructor for three points (no base offset)
+    public Triangle(int x1, int y1, int x2, int y2, int x3, int y3) : base(0, 0)
     {
         Points = new[]
         {
-            new Point(a1 + X, a2 + Y),
-            new Point(b1 + X, b2 + Y),
-            new Point(c1 + X, c2 + Y)
+            new Point(x1, y1),
+            new Point(x2, y2),
+            new Point(x3, y3)
         };
     }
 
-    // Draw triangle using polygon geometry
+    /// <summary>
+    /// Draw triangle using polygon geometry
+    /// </summary>
     public override void Draw(DrawingContext context)
     {
         var polygon = new PolylineGeometry(Points, true);
-
-        var fillBrush = new SolidColorBrush(Colors.Black);
-        var outPen = new Pen(Brushes.BlanchedAlmond, 2);
-
-        context.DrawGeometry(fillBrush, outPen, polygon);
+        
+        var fillBrush = new SolidColorBrush(Colors.LightBlue);
+        var outlinePen = new Pen(Brushes.Black, 2);
+        
+        context.DrawGeometry(fillBrush, outlinePen, polygon);
     }
 
-    // Returns triangle description
+    /// <summary>
+    /// Returns triangle description
+    /// </summary>
     public override string GetDescription()
     {
-        return $"Треугольник(X:{X}, Y:{Y}; A1:{Points[0]}, A2:{Points[1]}, B1:{Points[2]}, B2:{Points[3]}), C1:{Points[4]}, C2:{Points[5]} )";
+        return $"Triangle: ({Points[0].X:F0},{Points[0].Y:F0}) - " +
+               $"({Points[1].X:F0},{Points[1].Y:F0}) - " +
+               $"({Points[2].X:F0},{Points[2].Y:F0})";
     }
 }

@@ -1,11 +1,81 @@
+<!-- GraphicsLabAvalonia/Views/MainWindow.xaml -->
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GraphicsLabAvalonia.Views.MainWindow"
-        Title="Лаба1"
-        Background="Black"
-        Width="600" Height="600">
+        Title="Графический редактор"
+        Background="#2d2d2d"
+        Width="800" Height="700">
     
-    
-         <Canvas Name="DrawingCanvas" Background="White" Width="500" Height="500" ></Canvas>
-    
+    <DockPanel>
+        <!-- Left Panel with Controls -->
+        <StackPanel DockPanel.Dock="Left" 
+                    Width="200" 
+                    Background="#3d3d3d" 
+                    Margin="5" 
+                    Spacing="10">
+            
+            <TextBlock Text="Фигуры" 
+                       FontSize="18" 
+                       Foreground="White" 
+                       Margin="10,10,0,0"/>
+            
+            <!-- Shape Selection -->
+            <Border Background="#4d4d4d" 
+                    CornerRadius="5" 
+                    Padding="10" 
+                    Margin="5,10,5,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Выберите фигуру:" 
+                               Foreground="White" 
+                               FontWeight="Bold"/>
+                    
+                    <ListBox x:Name="ShapeTypeListBox" 
+                             Background="#5d5d5d"
+                             Foreground="White"
+                             Height="200">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" 
+                                           Foreground="White"
+                                           Margin="5"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+            
+            <!-- Current Shape Info -->
+            <Border Background="#4d4d4d" 
+                    CornerRadius="5" 
+                    Padding="10" 
+                    Margin="5,10,5,10">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Текущая фигура:" 
+                               Foreground="White" 
+                               FontWeight="Bold"/>
+                    
+                    <TextBlock x:Name="CurrentShapeInfo" 
+                               Text="Не выбрана"
+                               Foreground="#aaaaaa"
+                               FontSize="12"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        
+        <!-- Drawing Area -->
+        <Border Background="#1e1e1e" 
+                Margin="5" 
+                BorderBrush="#555555" 
+                BorderThickness="1">
+            <Canvas x:Name="DrawingCanvas" 
+                    Background="White" 
+                    Width="550" 
+                    Height="550"
+                    PointerPressed="OnCanvasPointerPressed"
+                    PointerMoved="OnCanvasPointerMoved"
+                    PointerReleased="OnCanvasPointerReleased">
+            </Canvas>
+        </Border>
+    </DockPanel>
 </Window>
