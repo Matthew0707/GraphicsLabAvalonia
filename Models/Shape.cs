@@ -1,13 +1,15 @@
-using Avalonia.Media;
+// GraphicsLabAvalonia/Models/Shape.cs
+using Avalonia;
 
 namespace GraphicsLabAvalonia.Models;
 
 // Abstract base class for all shapes
+// Does NOT contain drawing method - rendering is handled externally
 public abstract class Shape
 {
     // Position of shape
-    public int X { get;}
-    public int Y { get;}
+    public int X { get; set; }
+    public int Y { get; set; }
 
     // Base constructor
     protected Shape(int x, int y)
@@ -15,9 +17,6 @@ public abstract class Shape
         X = x;
         Y = y;
     }
-
-    // Every shape must implement its own drawing logic
-    public abstract void Draw(DrawingContext context);
 
     // Default textual description
     public virtual string GetDescription()

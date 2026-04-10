@@ -1,10 +1,9 @@
-// GraphicsLabAvalonia/Models/ShapeList.cs (добавьте методы)
-using System;
+// GraphicsLabAvalonia/Models/ShapeList.cs
 using System.Collections.Generic;
-using Avalonia.Media;
 
 namespace GraphicsLabAvalonia.Models;
 
+// Container class storing multiple shapes
 public class ShapeList
 {
     private List<Shape> _shapes;
@@ -30,19 +29,17 @@ public class ShapeList
         _shapes.Clear();
     }
 
+    // New method to get all shapes for rendering
+    public IEnumerable<Shape> GetAllShapes()
+    {
+        return _shapes;
+    }
+
     public IEnumerable<string> GetAllDescriptions()
     {
         foreach (var shape in _shapes)
         {
             yield return shape.GetDescription();
-        }
-    }
-
-    public void DrawAll(DrawingContext context)
-    {
-        foreach (var shape in _shapes)
-        {
-            shape.Draw(context);
         }
     }
 }

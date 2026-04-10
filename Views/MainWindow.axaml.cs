@@ -8,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using GraphicsLabAvalonia.Factories;
 using GraphicsLabAvalonia.Models;
+using GraphicsLabAvalonia.Rendering;
 
 namespace GraphicsLabAvalonia.Views;
 
@@ -23,6 +24,9 @@ public partial class MainWindow : Window
     // Factory manager for creating shapes dynamically
     private ShapeFactoryManager _factoryManager;
     
+    // Render manager for drawing shapes
+    private RenderManager _renderManager;
+    
     // Current drawing state
     private string _currentShapeType;
     private bool _isDrawing;
@@ -33,8 +37,9 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // Initialize collections
+        // Initialize collections and managers
         _shapes = new ShapeList();
+        _renderManager = new RenderManager();
         
         // Initialize and configure factory manager
         InitializeFactoryManager();
@@ -185,17 +190,14 @@ public partial class MainWindow : Window
                 return new[] { x1, y1, width, height };
                 
             case "Circle":
-                // Circle uses diameter (minimum of width and height for proper circle)
                 int diameter = Math.Min(width, height);
                 return new[] { x1, y1, diameter };
                 
             case "Square":
-                // Square uses same size for both dimensions
                 int side = Math.Min(width, height);
                 return new[] { x1, y1, side };
                 
             case "Triangle":
-                // Create triangle with base at bottom
                 return new[]
                 {
                     x1, y2,                    // Bottom-left
@@ -223,26 +225,33 @@ public partial class MainWindow : Window
     {
         var canvas = this.FindControl<Canvas>("DrawingCanvas");
         if (canvas == null) return;
-        
+    
         var width = (int)canvas.Bounds.Width;
         var height = (int)canvas.Bounds.Height;
-        
+    
         if (width <= 0 || height <= 0) return;
-        
+    
         var bitmap = new RenderTargetBitmap(new PixelSize(width, height));
-        
+    
         using (var ctx = bitmap.CreateDrawingContext())
         {
-            // Draw existing shapes
-            _shapes.DrawAll(ctx);
-            
-            // Draw preview shape with dashed/different style
+            // Draw existing shapes using RenderManager
+            _renderManager.RenderShapes(ctx, _shapes.GetAllShapes());
+        
+            // Draw preview shape
             if (_isDrawing)
             {
                 try
                 {
                     var previewShape = CreatePreviewShape();
-                    DrawPreviewShape(ctx, previewShape);
+                
+                    // Save context state for transparency
+                    using (ctx.PushOpacity(0.5))
+                    {
+                        _renderManager.RenderShape(ctx, previewShape);
+                    }
+                
+                    DrawBoundingBox(ctx);
                 }
                 catch
                 {
@@ -250,32 +259,16 @@ public partial class MainWindow : Window
                 }
             }
         }
-        
+    
         var image = new Image
         {
             Source = bitmap,
             Width = width,
             Height = height
         };
-        
+    
         canvas.Children.Clear();
         canvas.Children.Add(image);
-    }
-    
-    /// <summary>
-    /// Draw preview shape with distinctive style
-    /// </summary>
-    private void DrawPreviewShape(DrawingContext context, Shape shape)
-    {
-        // Save current state
-        using (context.PushOpacity(0.5))
-        {
-            // Draw shape with semi-transparency for preview
-            shape.Draw(context);
-        }
-        
-        // Draw bounding box indicators
-        DrawBoundingBox(context);
     }
     
     /// <summary>
@@ -312,7 +305,8 @@ public partial class MainWindow : Window
         
         using (var ctx = bitmap.CreateDrawingContext())
         {
-            _shapes.DrawAll(ctx);
+            // Use RenderManager instead of shape.Draw()
+            _renderManager.RenderShapes(ctx, _shapes.GetAllShapes());
         }
         
         var image = new Image

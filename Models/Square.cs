@@ -1,46 +1,18 @@
-using System;
-using Avalonia;
-using Avalonia.Media;
-
+// GraphicsLabAvalonia/Models/Square.cs
 namespace GraphicsLabAvalonia.Models;
 
-// Square shape with equal sides
+// Square shape - only data, no drawing logic
 public class Square : Shape
 {
-    private int _width;
+    public int Side { get; set; }
 
-    // Side length
-    public int Width
-    {
-        get { return _width; }
-        set
-        {
-            if (value <= 0)
-                throw new ArgumentException("Сторона должна быть положительной");
-                
-            _width = value;
-        }
-    }
-
-    // Constructor initializes side length
     public Square(int x, int y, int side) : base(x, y)
     {
-        Width = side;
+        Side = side;
     }
 
-    // Draw filled square with border
-    public override void Draw(DrawingContext context)
-    {
-        context.FillRectangle(Brushes.Red, new Rect(X, Y, Width, Width));
-        
-        var pen = new Pen(Brushes.Black, 2);
-
-        context.DrawRectangle(pen, new Rect(X, Y, Width, Width));
-    }
-
-    // Returns description
     public override string GetDescription()
     {
-        return $"Прямоугольник(X:{X}, Y:{Y}; сторона:{Width})";
+        return $"Square (X:{X}, Y:{Y}, Side:{Side})";
     }
 }
