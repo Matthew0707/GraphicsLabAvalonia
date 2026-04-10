@@ -2,9 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GraphicsLabAvalonia.Views.MainWindow"
         Title="Лаба1"
-        Background="White"
+        Background="Black"
         Width="600" Height="600">
     
-       <Canvas Name="DrawingCanvas" Background="Green" />
+    
+         <Canvas Name="DrawingCanvas" Background="White" Width="500" Height="500" ></Canvas>
     
 </Window>
