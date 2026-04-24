@@ -1,13 +1,11 @@
 // GraphicsLabAvalonia/Factories/LineFactory.cs
 
 using System;
+using Avalonia;
 using GraphicsLabAvalonia.Models;
 
 namespace GraphicsLabAvalonia.Factories;
 
-/// <summary>
-/// Factory for creating Line shapes
-/// </summary>
 public class LineFactory : IShapeFactory
 {
     public Shape CreateShape(params int[] parameters)
@@ -16,6 +14,11 @@ public class LineFactory : IShapeFactory
             throw new ArgumentException($"Line requires {RequiredParametersCount} parameters: x1, y1, x2, y2");
         
         return new Line(parameters[0], parameters[1], parameters[2], parameters[3]);
+    }
+
+    public int[] CalculateParameters(Point start, Point end)
+    {
+        return new[] { (int)start.X, (int)start.Y, (int)end.X, (int)end.Y };
     }
 
     public int RequiredParametersCount => 4;

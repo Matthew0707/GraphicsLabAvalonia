@@ -37,20 +37,22 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // Initialize collections and managers
         _shapes = new ShapeList();
+        
+        // Auto-discovery happens in constructors
+        _factoryManager = new ShapeFactoryManager();
         _renderManager = new RenderManager();
         
-        // Initialize and configure factory manager
-        InitializeFactoryManager();
+        // Populate UI with discovered shape types
+        var shapeTypes = _factoryManager.GetAvailableShapeTypes().ToList();
+        ShapeTypeListBox.ItemsSource = shapeTypes;
         
-        // Set up UI event handlers
+        if (shapeTypes.Any())
+            ShapeTypeListBox.SelectedIndex = 0;
+        
         ShapeTypeListBox.SelectionChanged += OnShapeTypeChanged;
-        
-        // Register window events
         SizeChanged += (s, e) => DrawShapes();
         
-        // Initial draw
         DrawShapes();
     }
     
@@ -163,8 +165,14 @@ public partial class MainWindow : Window
     /// </summary>
     private Shape CreateShapeFromPoints(Point start, Point end)
     {
-        var parameters = CalculateShapeParameters(start, end);
-        return _factoryManager.CreateShape(_currentShapeType, parameters);
+        // Get the appropriate factory
+        var factory = _factoryManager.GetFactory(_currentShapeType);
+    
+        // Factory calculates its own parameters - NO SWITCH!
+        var parameters = factory.CalculateParameters(start, end);
+    
+        // Factory creates the shape
+        return factory.CreateShape(parameters);
     }
     
     /// <summary>

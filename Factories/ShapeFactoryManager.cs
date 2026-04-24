@@ -1,16 +1,14 @@
 // GraphicsLabAvalonia/Factories/ShapeFactoryManager.cs
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using GraphicsLabAvalonia.Models;
 
 namespace GraphicsLabAvalonia.Factories;
 
 /// <summary>
-/// Manages all shape factories. This class allows dynamic registration
-/// of new shape factories without modifying existing code.
-/// Follows the Open/Closed Principle - open for extension, closed for modification.
+/// Manages all shape factories with automatic discovery
 /// </summary>
 public class ShapeFactoryManager
 {
@@ -19,28 +17,55 @@ public class ShapeFactoryManager
     public ShapeFactoryManager()
     {
         _factories = new Dictionary<string, IShapeFactory>();
+        
+        // Automatically discover and register all factories
+        AutoDiscoverFactories();
     }
     
     /// <summary>
-    /// Registers a new shape factory
+    /// Automatically finds all IShapeFactory implementations in the assembly
+    /// No manual registration needed when adding new shapes!
     /// </summary>
-    /// <param name="factory">The factory to register</param>
+    private void AutoDiscoverFactories()
+    {
+        // Get the current assembly
+        var assembly = Assembly.GetExecutingAssembly();
+        
+        // Find all types that implement IShapeFactory and are not abstract
+        var factoryTypes = assembly.GetTypes()
+            .Where(t => typeof(IShapeFactory).IsAssignableFrom(t) 
+                        && !t.IsInterface 
+                        && !t.IsAbstract);
+        
+        // Create instance of each factory and register it
+        foreach (var type in factoryTypes)
+        {
+            try
+            {
+                var factory = (IShapeFactory)Activator.CreateInstance(type);
+                RegisterFactory(factory);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Failed to load factory {type.Name}: {ex.Message}");
+            }
+        }
+    }
+    
+    /// <summary>
+    /// Register a factory (kept for manual registration if needed)
+    /// </summary>
     public void RegisterFactory(IShapeFactory factory)
     {
         _factories[factory.ShapeTypeName] = factory;
     }
     
-    /// <summary>
-    /// Gets all available shape type names
-    /// </summary>
     public IEnumerable<string> GetAvailableShapeTypes()
     {
         return _factories.Keys;
     }
     
-    /// <summary>
-    /// Gets a specific factory by shape type name
-    /// </summary>
     public IShapeFactory GetFactory(string shapeType)
     {
         if (_factories.TryGetValue(shapeType, out var factory))
@@ -49,9 +74,6 @@ public class ShapeFactoryManager
         throw new ArgumentException($"No factory registered for shape type: {shapeType}");
     }
     
-    /// <summary>
-    /// Creates a shape using the appropriate factory
-    /// </summary>
     public Shape CreateShape(string shapeType, params int[] parameters)
     {
         var factory = GetFactory(shapeType);
