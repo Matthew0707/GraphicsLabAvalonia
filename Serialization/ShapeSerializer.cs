@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Serialization/ShapeJsonConverter.cs
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace GraphicsLabAvalonia.Serialization;
 // Each shape type provides its own serialization logic
 public class ShapeJsonConverter : JsonConverter<Shape>
 {
-    // Map of shape type names to their types (built once via reflection)
+    
     private static readonly Dictionary<string, Type> ShapeTypeMap = BuildTypeMap();
     
     private static Dictionary<string, Type> BuildTypeMap()

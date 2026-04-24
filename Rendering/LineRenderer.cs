@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Rendering/LineRenderer.cs
+
 using Avalonia;
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;

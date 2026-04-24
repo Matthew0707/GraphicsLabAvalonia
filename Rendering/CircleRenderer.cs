@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Rendering/CircleRenderer.cs
+
 using Avalonia;
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;

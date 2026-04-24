@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/TriangleFactory.cs
+
 
 using System;
 using Avalonia;

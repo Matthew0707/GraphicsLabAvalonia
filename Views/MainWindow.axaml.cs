@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Views/MainWindow.xaml.cs
+
 using System;
 using System.Linq;
 using Avalonia;
@@ -42,7 +42,13 @@ public partial class MainWindow : Window
         
         var shapeTypes = _factoryManager.GetAvailableShapeTypes().ToList();
         ShapeTypeListBox.ItemsSource = shapeTypes;
-        if (shapeTypes.Any()) ShapeTypeListBox.SelectedIndex = 0;
+        
+        if (shapeTypes.Any())
+        {
+            ShapeTypeListBox.SelectedIndex = 0;
+            _currentShapeType = shapeTypes[0];
+            CurrentShapeInfo.Text = $"Selected: {_currentShapeType}";
+        }
         
         ShapeTypeListBox.SelectionChanged += OnShapeTypeChanged;
         SizeChanged += (s, e) => DrawShapes();
@@ -63,37 +69,48 @@ public partial class MainWindow : Window
     {
         var pos = e.GetPosition(DrawingCanvas);
         var props = e.GetCurrentPoint(this).Properties;
-        
+    
         if (!props.IsLeftButtonPressed) return;
-        
-        // Check if clicking on existing shape for selection/edit
+    
+        // Clear previous selection visual
+        if (_selectedShape != null)
+            DrawShapes();
+    
+        // Check if clicking on existing shape
         var clickedShape = _shapes.FindAtPoint((int)pos.X, (int)pos.Y);
-        
-        if (clickedShape != null)
+    
+        // Deselect if clicking empty space
+        if (clickedShape == null)
         {
-            // Select and prepare for dragging
-            _selectedShape = clickedShape;
-            _isDragging = true;
-            _startPoint = pos;
-            CurrentShapeInfo.Text = $"Selected: {_selectedShape.GetDescription()}";
-        }
-        else
-        {
-            // Start drawing new shape
-            if (string.IsNullOrEmpty(_currentShapeType)) return;
             _selectedShape = null;
-            _isDrawing = true;
-            _startPoint = pos;
-            _currentPoint = pos;
-            e.Pointer.Capture(DrawingCanvas);
+            _isDragging = false;
+            CurrentShapeInfo.Text = "Deselected";
+            DrawShapes();
+        
+            // Start drawing new shape
+            if (!string.IsNullOrEmpty(_currentShapeType))
+            {
+                _isDrawing = true;
+                _startPoint = pos;
+                _currentPoint = pos;
+                e.Pointer.Capture(DrawingCanvas);
+            }
+            return;
         }
+    
+        // Select shape
+        _selectedShape = clickedShape;
+        _isDragging = true;
+        _startPoint = pos;
+        CurrentShapeInfo.Text = $"Selected: {_selectedShape.GetDescription()}";
+        DrawShapes(); // Will show selection highlight
     }
     
     // Handle pointer move - preview drawing or resize
     private void OnCanvasPointerMoved(object sender, PointerEventArgs e)
     {
         var pos = e.GetPosition(DrawingCanvas);
-        
+    
         if (_isDrawing)
         {
             _currentPoint = pos;
@@ -101,43 +118,23 @@ public partial class MainWindow : Window
         }
         else if (_isDragging && _selectedShape != null)
         {
-            // Resize/move selected shape
-            var dx = (int)(pos.X - _startPoint.X);
-            var dy = (int)(pos.Y - _startPoint.Y);
+            // Calculate how much the mouse moved
+            int dx = (int)(pos.X - _startPoint.X);
+            int dy = (int)(pos.Y - _startPoint.Y);
+        
+            if (dx != 0 || dy != 0)
+            {
+                // Resize - shape stays in place, only size changes
+                _selectedShape.Resize(dx, dy);
             
-            ResizeShape(_selectedShape, dx, dy);
-            _startPoint = pos;
-            DrawShapes();
+                // Update reference point for continuous resizing
+                _startPoint = pos;
+                DrawShapes();
+            }
         }
     }
     
     // Resize selected shape
-    private void ResizeShape(Shape shape, int dx, int dy)
-    {
-        switch (shape)
-        {
-            case Circle c:
-                c.Diameter = Math.Max(10, c.Diameter + Math.Max(dx, dy));
-                break;
-            case Rectangle r:
-                r.Width = Math.Max(10, r.Width + dx);
-                r.Height = Math.Max(10, r.Height + dy);
-                break;
-            case Square s:
-                int delta = Math.Max(dx, dy);
-                s.Side = Math.Max(10, s.Side + delta);
-                break;
-            case Line l:
-                l.X2 += dx;
-                l.Y2 += dy;
-                break;
-            case Ellipse e:
-                e.Width = Math.Max(10, e.Width + dx);
-                e.Height = Math.Max(10, e.Height + dy);
-                break;
-        }
-    }
-    
     // Handle pointer release - finalize drawing or dragging
     private void OnCanvasPointerReleased(object sender, PointerReleasedEventArgs e)
     {
@@ -295,7 +292,7 @@ public partial class MainWindow : Window
     {
         var pen = new Pen(Brushes.Red, 2, new DashStyle(new[] { 5.0, 5.0 }, 0));
         // Draw highlight based on shape type
-        ctx.DrawRectangle(pen, new Rect(shape.X - 5, shape.Y - 5, 10, 10));
+        ctx.DrawEllipse(Brushes.Yellow, pen, new Rect(shape.X, shape.Y - 5, 2, 2));
     }
     
     private void DrawBoundingBox(DrawingContext ctx)

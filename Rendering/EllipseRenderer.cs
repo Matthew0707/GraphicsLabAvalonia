@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Rendering/EllipseRenderer.cs
+
 using Avalonia;
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;

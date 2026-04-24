@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/IShapeFactory.cs
+
 using Avalonia;
 using GraphicsLabAvalonia.Models;
 

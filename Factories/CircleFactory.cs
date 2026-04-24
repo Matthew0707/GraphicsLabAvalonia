@@ -1,4 +1,3 @@
-// GraphicsLabAvalonia/Factories/CircleFactory.cs
 
 using System;
 using Avalonia;

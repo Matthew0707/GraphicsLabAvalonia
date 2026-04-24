@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/SquareFactory.cs
+
 
 using System;
 using Avalonia;

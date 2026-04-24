@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/RectangleFactory.cs
+
 
 using System;
 using Avalonia;

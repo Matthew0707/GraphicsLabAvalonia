@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/EllipseFactory.cs
+
 
 using System;
 using Avalonia;

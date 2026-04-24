@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Rendering/IShapeRenderer.cs
+
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;
 

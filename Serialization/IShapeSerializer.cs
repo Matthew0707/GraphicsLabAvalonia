@@ -1,4 +1,3 @@
-// GraphicsLabAvalonia/Serialization/IShapeSerializer.cs
 using System.Collections.Generic;
 using GraphicsLabAvalonia.Models;
 

@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Factories/LineFactory.cs
+
 
 using System;
 using Avalonia;

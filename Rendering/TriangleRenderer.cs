@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Rendering/TriangleRenderer.cs
+
 using Avalonia;
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;

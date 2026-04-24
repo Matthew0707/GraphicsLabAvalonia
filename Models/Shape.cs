@@ -1,20 +1,15 @@
-// GraphicsLabAvalonia/Models/Shape.cs
+
 using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace GraphicsLabAvalonia.Models;
 
-// Abstract base class for all shapes
 public abstract class Shape
 {
-    // Unique identifier for serialization
     public Guid Id { get; set; } = Guid.NewGuid();
-    
-    // Position
     public int X { get; set; }
     public int Y { get; set; }
-    
-    // Colors for serialization
     public string FillColor { get; set; } = "LightBlue";
     public string StrokeColor { get; set; } = "Black";
     public double StrokeThickness { get; set; } = 2;
@@ -25,11 +20,19 @@ public abstract class Shape
         Y = y;
     }
     
-    // Parameterless constructor for deserialization
     protected Shape() { }
 
+    // Each shape writes its own data to JSON
+    public abstract void WriteJson(Utf8JsonWriter writer);
+    
+    // Each shape reads its own data from JSON
+    public abstract void ReadJson(JsonElement element);
+
+    public abstract void Resize(int dx, int dy);
+    
     public virtual string GetDescription()
     {
         return $"{GetType().Name}({X}, {Y})";
     }
+    public abstract bool Contains(int x, int y);
 }
