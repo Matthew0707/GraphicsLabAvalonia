@@ -1,7 +1,8 @@
 // GraphicsLabAvalonia/Models/Line.cs
+using System.Text.Json.Serialization;
+
 namespace GraphicsLabAvalonia.Models;
 
-// Line shape - only data, no drawing logic
 public class Line : Shape
 {
     public int X2 { get; set; }
@@ -12,6 +13,9 @@ public class Line : Shape
         X2 = x2;
         Y2 = y2;
     }
+    
+    [JsonConstructor]
+    public Line() : base() { }
 
     public override string GetDescription()
     {

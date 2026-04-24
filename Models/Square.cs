@@ -1,7 +1,8 @@
 // GraphicsLabAvalonia/Models/Square.cs
+using System.Text.Json.Serialization;
+
 namespace GraphicsLabAvalonia.Models;
 
-// Square shape - only data, no drawing logic
 public class Square : Shape
 {
     public int Side { get; set; }
@@ -10,9 +11,12 @@ public class Square : Shape
     {
         Side = side;
     }
+    
+    [JsonConstructor]
+    public Square() : base() { }
 
     public override string GetDescription()
     {
-        return $"Square (X:{X}, Y:{Y}, Side:{Side})";
+        return $"Square (X:{X}, Y:{Y}, S:{Side})";
     }
 }

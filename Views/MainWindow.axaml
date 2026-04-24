@@ -4,78 +4,76 @@
         x:Class="GraphicsLabAvalonia.Views.MainWindow"
         Title="Графический редактор"
         Background="#2d2d2d"
-        Width="800" Height="700">
+        Width="900" Height="700">
     
     <DockPanel>
-        <!-- Left Panel with Controls -->
-        <StackPanel DockPanel.Dock="Left" 
-                    Width="200" 
-                    Background="#3d3d3d" 
-                    Margin="5" 
-                    Spacing="10">
+        <!-- Left Panel -->
+        <StackPanel DockPanel.Dock="Left" Width="220" Background="#3d3d3d" 
+                    Margin="5" Spacing="8">
             
-            <TextBlock Text="Фигуры" 
-                       FontSize="18" 
-                       Foreground="White" 
+            <TextBlock Text="Фигуры" FontSize="18" Foreground="White" 
                        Margin="10,10,0,0"/>
             
             <!-- Shape Selection -->
-            <Border Background="#4d4d4d" 
-                    CornerRadius="5" 
-                    Padding="10" 
-                    Margin="5,10,5,0">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Выберите фигуру:" 
-                               Foreground="White" 
+            <Border Background="#4d4d4d" CornerRadius="5" Padding="10" 
+                    Margin="5,5,5,0">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Выберите фигуру:" Foreground="White" 
                                FontWeight="Bold"/>
-                    
-                    <ListBox x:Name="ShapeTypeListBox" 
-                             Background="#5d5d5d"
-                             Foreground="White"
-                             Height="200">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding}" 
-                                           Foreground="White"
-                                           Margin="5"/>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                    <ListBox x:Name="ShapeTypeListBox" Background="#5d5d5d"
+                             Foreground="White" Height="150"/>
                 </StackPanel>
             </Border>
             
-            <!-- Current Shape Info -->
-            <Border Background="#4d4d4d" 
-                    CornerRadius="5" 
-                    Padding="10" 
-                    Margin="5,10,5,10">
-                <StackPanel Spacing="8">
-                    <TextBlock Text="Текущая фигура:" 
-                               Foreground="White" 
+            <!-- File Operations -->
+            <Border Background="#4d4d4d" CornerRadius="5" Padding="10" 
+                    Margin="5,5,5,0">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Файл:" Foreground="White" FontWeight="Bold"/>
+                    <Button x:Name="SaveButton" Content="Сохранить (JSON)"
+                            Background="#007acc" Foreground="White"
+                            Click="OnSaveButtonClick"/>
+                    <Button x:Name="LoadButton" Content="Загрузить (JSON)"
+                            Background="#007acc" Foreground="White"
+                            Click="OnLoadButtonClick"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Editing -->
+            <Border Background="#4d4d4d" CornerRadius="5" Padding="10" 
+                    Margin="5,5,5,0">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Редактирование:" Foreground="White" 
                                FontWeight="Bold"/>
-                    
-                    <TextBlock x:Name="CurrentShapeInfo" 
-                               Text="Не выбрана"
-                               Foreground="#aaaaaa"
-                               FontSize="12"
+                    <Button x:Name="DeleteButton" Content="Удалить выбранное"
+                            Background="#d32f2f" Foreground="White"
+                            Click="OnDeleteButtonClick"/>
+                    <Button x:Name="ClearButton" Content="Очистить холст"
+                            Background="#f57c00" Foreground="White"
+                            Click="OnClearButtonClick"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Info -->
+            <Border Background="#4d4d4d" CornerRadius="5" Padding="10" 
+                    Margin="5,5,5,10">
+                <StackPanel Spacing="5">
+                    <TextBlock Text="Инфо:" Foreground="White" FontWeight="Bold"/>
+                    <TextBlock x:Name="CurrentShapeInfo" Text="Не выбрана"
+                               Foreground="#aaaaaa" FontSize="11" 
                                TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
         </StackPanel>
         
         <!-- Drawing Area -->
-        <Border Background="#1e1e1e" 
-                Margin="5" 
-                BorderBrush="#555555" 
+        <Border Background="#1e1e1e" Margin="5" BorderBrush="#555" 
                 BorderThickness="1">
-            <Canvas x:Name="DrawingCanvas" 
-                    Background="White" 
-                    Width="550" 
-                    Height="550"
+            <Canvas x:Name="DrawingCanvas" Background="White" 
+                    Width="600" Height="600"
                     PointerPressed="OnCanvasPointerPressed"
                     PointerMoved="OnCanvasPointerMoved"
-                    PointerReleased="OnCanvasPointerReleased">
-            </Canvas>
+                    PointerReleased="OnCanvasPointerReleased"/>
         </Border>
     </DockPanel>
 </Window>

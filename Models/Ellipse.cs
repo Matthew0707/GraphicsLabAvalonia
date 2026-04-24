@@ -1,7 +1,8 @@
 // GraphicsLabAvalonia/Models/Ellipse.cs
+using System.Text.Json.Serialization;
+
 namespace GraphicsLabAvalonia.Models;
 
-// Ellipse shape - only data, no drawing logic
 public class Ellipse : Shape
 {
     public int Width { get; set; }
@@ -12,9 +13,12 @@ public class Ellipse : Shape
         Width = width;
         Height = height;
     }
+    
+    [JsonConstructor]
+    public Ellipse() : base() { }
 
     public override string GetDescription()
     {
-        return $"Ellipse (X:{X}, Y:{Y}, Width:{Width}, Height:{Height})";
+        return $"Ellipse (X:{X}, Y:{Y}, W:{Width}, H:{Height})";
     }
 }

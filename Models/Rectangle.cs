@@ -1,7 +1,8 @@
 // GraphicsLabAvalonia/Models/Rectangle.cs
+using System.Text.Json.Serialization;
+
 namespace GraphicsLabAvalonia.Models;
 
-// Rectangle shape - only data, no drawing logic
 public class Rectangle : Shape
 {
     public int Width { get; set; }
@@ -12,9 +13,12 @@ public class Rectangle : Shape
         Width = width;
         Height = height;
     }
+    
+    [JsonConstructor]
+    public Rectangle() : base() { }
 
     public override string GetDescription()
     {
-        return $"Rectangle (X:{X}, Y:{Y}, Width:{Width}, Height:{Height})";
+        return $"Rectangle (X:{X}, Y:{Y}, W:{Width}, H:{Height})";
     }
 }
