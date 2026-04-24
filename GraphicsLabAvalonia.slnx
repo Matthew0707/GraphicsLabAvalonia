@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="GraphicsLabAvalonia.csproj" />
+  <Project Path="HexagonPlugin/HexagonPlugin.csproj" />
+  <Project Path="StarPlugin/StarPlugin.csproj" />
+</Solution>

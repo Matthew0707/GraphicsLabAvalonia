@@ -13,6 +13,9 @@ using GraphicsLabAvalonia.Serialization;
 
 namespace GraphicsLabAvalonia.Views;
 
+
+using GraphicsLabAvalonia.Plugins;
+
 // Main editor window - Controller in MVC
 public partial class MainWindow : Window
 {
@@ -20,6 +23,7 @@ public partial class MainWindow : Window
     private ShapeFactoryManager _factoryManager;
     private RenderManager _renderManager;
     private JsonShapeSerializer _serializer;
+    private PluginLoader _pluginLoader; 
     
     // Drawing state
     private string _currentShapeType;
@@ -39,6 +43,11 @@ public partial class MainWindow : Window
         _factoryManager = new ShapeFactoryManager();
         _renderManager = new RenderManager();
         _serializer = new JsonShapeSerializer();
+        
+        
+        _pluginLoader = new PluginLoader();
+        _pluginLoader.LoadAll(_factoryManager, _renderManager, _serializer);
+        
         
         var shapeTypes = _factoryManager.GetAvailableShapeTypes().ToList();
         ShapeTypeListBox.ItemsSource = shapeTypes;
@@ -299,12 +308,20 @@ public partial class MainWindow : Window
     {
         var dashStyle = new DashStyle(new[] { 5.0, 5.0 }, 0);
         var pen = new Pen(Brushes.Blue, 1, dashStyle);
-        
-        int x = (int)Math.Min(_startPoint.X, _currentPoint.X);
-        int y = (int)Math.Min(_startPoint.Y, _currentPoint.Y);
-        int w = (int)Math.Abs(_currentPoint.X - _startPoint.X);
-        int h = (int)Math.Abs(_currentPoint.Y - _startPoint.Y);
-        
-        ctx.DrawRectangle(pen, new Rect(x, y, w, h));
+    
+        // Always draw from start to current - works for ALL shapes
+        double x = Math.Min(_startPoint.X, _currentPoint.X);
+        double y = Math.Min(_startPoint.Y, _currentPoint.Y);
+        double w = Math.Abs(_currentPoint.X - _startPoint.X);
+        double h = Math.Abs(_currentPoint.Y - _startPoint.Y);
+    
+        // Minimum size so box is always visible
+        if (w < 5 && h < 5)
+        {
+            w = 20;
+            h = 20;
+        }
+    
+        ctx.DrawRectangle(null, pen, new Rect(x, y, w, h));
     }
 }
