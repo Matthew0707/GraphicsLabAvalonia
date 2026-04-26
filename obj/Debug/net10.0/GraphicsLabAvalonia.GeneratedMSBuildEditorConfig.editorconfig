@@ -28,3 +28,6 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/Views/SettingsWindow.xaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

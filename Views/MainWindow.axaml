@@ -51,6 +51,12 @@
                     <Button x:Name="ClearButton" Content="Очистить холст"
                             Background="#f57c00" Foreground="White"
                             Click="OnClearButtonClick"/>
+                    <Button x:Name="SettingsButton" Content="Settings"
+                            Background="#555555" Foreground="White"
+                            Click="OnSettingsButtonClick" Margin="5,10,5,0"/>
+
+                    <TextBlock x:Name="ProcessorStatus" Text="Processor: None"
+                               Foreground="#888888" FontSize="10" Margin="5,5,5,0"/>
                 </StackPanel>
             </Border>
             

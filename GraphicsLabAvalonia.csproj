@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,7 +10,9 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
   </ItemGroup>
-
+  <ItemGroup>
+    <AvaloniaXaml Include="Views\SettingsWindow.xaml" />
+  </ItemGroup>
   <!-- Exclude plugin projects from compilation -->
   <ItemGroup>
     <Compile Remove="HexagonPlugin\**" />
@@ -31,5 +33,11 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="SortProcessorPlugin\**" />
+    <Compile Remove="ScaleProcessorPlugin\**" />
+    <None Remove="SortProcessorPlugin\**" />
+    <None Remove="ScaleProcessorPlugin\**" />
   </ItemGroup>
 </Project>

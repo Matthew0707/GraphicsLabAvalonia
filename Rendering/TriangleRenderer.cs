@@ -5,31 +5,25 @@ using GraphicsLabAvalonia.Models;
 
 namespace GraphicsLabAvalonia.Rendering;
 
-// Renderer for Triangle shapes
 public class TriangleRenderer : IShapeRenderer
 {
-    public bool CanRender(Shape shape)
-    {
-        return shape is Triangle;
-    }
+    public bool CanRender(Shape s) => s is Triangle;
 
-    public void Render(DrawingContext context, Shape shape)
+    public void Render(DrawingContext ctx, Shape s)
     {
-        var triangle = shape as Triangle;
-        if (triangle == null) return;
+        var t = s as Triangle;
+        if (t == null) return;
 
         var points = new[]
         {
-            triangle.Point1,
-            triangle.Point2,
-            triangle.Point3
+            new Point(t.X, t.Y),
+            new Point(t.X2, t.Y2),
+            new Point(t.X3, t.Y3)
         };
-        
-        var polygon = new PolylineGeometry(points, true);
-        
-        var fillBrush = new SolidColorBrush(Colors.LightCoral);
-        var outlinePen = new Pen(Brushes.Black, 2);
-        
-        context.DrawGeometry(fillBrush, outlinePen, polygon);
+
+        var geometry = new PolylineGeometry(points, true);
+        var fill = new SolidColorBrush(Colors.LightCoral);
+        var pen = new Pen(Brushes.Black, 2);
+        ctx.DrawGeometry(fill, pen, geometry);
     }
 }

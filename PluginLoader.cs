@@ -17,7 +17,8 @@ namespace GraphicsLabAvalonia;
 public class PluginLoader
 {
     private readonly string _pluginsPath;
-
+    private readonly List<IDataProcessor> _loadedProcessors = new();
+    public IReadOnlyList<IDataProcessor> Processors => _loadedProcessors;
     public PluginLoader()
     {
         // Plugins folder is next to the executable
@@ -28,7 +29,37 @@ public class PluginLoader
         if (!Directory.Exists(_pluginsPath))
             Directory.CreateDirectory(_pluginsPath);
     }
+    /// <summary>
+    /// Load data processor plugins from Plugins folder
+    /// </summary>
+    public void LoadProcessors()
+    {
+        if (!Directory.Exists(_pluginsPath)) return;
 
+        foreach (var dll in Directory.GetFiles(_pluginsPath, "*.dll"))
+        {
+            try
+            {
+                var assembly = Assembly.LoadFrom(dll);
+                var processorTypes = assembly.GetTypes()
+                    .Where(t => typeof(IDataProcessor).IsAssignableFrom(t)
+                                && !t.IsAbstract && !t.IsInterface);
+
+                foreach (var type in processorTypes)
+                {
+                    var processor = (IDataProcessor)Activator.CreateInstance(type);
+                    _loadedProcessors.Add(processor);
+                    System.Diagnostics.Debug.WriteLine(
+                        $"LOADED PROCESSOR: {processor.ProcessorName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"Failed to load processor: {ex.Message}");
+            }
+        }
+    }
     /// <summary>
     /// Loads all plugin .dll files from the Plugins folder.
     /// Each plugin registers its factory, renderer, and serializer.

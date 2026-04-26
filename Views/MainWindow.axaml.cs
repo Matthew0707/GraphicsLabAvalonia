@@ -1,6 +1,8 @@
 
 using System;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -30,7 +32,8 @@ public partial class MainWindow : Window
     private bool _isDrawing;
     private Point _startPoint;
     private Point _currentPoint;
-    
+    private IDataProcessor _activeProcessor;
+    private bool _processingEnabled;
     // Selection state
     private Shape _selectedShape;
     private bool _isDragging;
@@ -47,15 +50,29 @@ public partial class MainWindow : Window
         
         _pluginLoader = new PluginLoader();
         _pluginLoader.LoadAll(_factoryManager, _renderManager, _serializer);
+        _pluginLoader.LoadProcessors();
+        var assembly = Assembly.GetExecutingAssembly();
+        var shapeTypes = assembly.GetTypes()
+            .Where(t => typeof(Shape).IsAssignableFrom(t) && !t.IsAbstract && t != typeof(Shape));
+
+        foreach (var type in shapeTypes)
+        {
+            try
+            {
+                Activator.CreateInstance(type);
+            }
+            catch { }
+        }
         
+        UpdateProcessorStatus();
         
-        var shapeTypes = _factoryManager.GetAvailableShapeTypes().ToList();
-        ShapeTypeListBox.ItemsSource = shapeTypes;
+        var shapeTypes1 = _factoryManager.GetAvailableShapeTypes().ToList();
+        ShapeTypeListBox.ItemsSource = shapeTypes1;
         
-        if (shapeTypes.Any())
+        if (shapeTypes1.Any())
         {
             ShapeTypeListBox.SelectedIndex = 0;
-            _currentShapeType = shapeTypes[0];
+            _currentShapeType = shapeTypes1[0];
             CurrentShapeInfo.Text = $"Selected: {_currentShapeType}";
         }
         
@@ -180,12 +197,29 @@ public partial class MainWindow : Window
             DefaultExtension = ".json",
             Filters = { new FileDialogFilter { Name = "JSON", Extensions = { "json" } } }
         };
-        
+
         var path = await dialog.ShowAsync(this);
         if (!string.IsNullOrEmpty(path))
         {
-            _serializer.Serialize(path, _shapes.GetAllShapes());
-            CurrentShapeInfo.Text = $"Saved: {_shapes.Count} shapes";
+            var shapes = _shapes.GetAllShapes().ToList();
+        
+            // DEBUG
+            System.Diagnostics.Debug.WriteLine($"Processor enabled: {_processingEnabled}");
+            System.Diagnostics.Debug.WriteLine($"Active processor: {_activeProcessor?.ProcessorName ?? "NULL"}");
+        
+            // Apply processor before save
+            if (_processingEnabled && _activeProcessor != null)
+            {
+                Console.WriteLine($"MAIN: Calling processor {_activeProcessor.ProcessorName}");
+                shapes = _activeProcessor.ProcessBeforeSave(shapes);
+            }
+            else
+            {
+                Console.WriteLine($"MAIN: Processor skipped. Enabled={_processingEnabled}, Processor={_activeProcessor?.ProcessorName ?? "null"}");
+            }
+        
+            _serializer.Serialize(path, shapes);
+            CurrentShapeInfo.Text = $"Saved: {shapes.Count} shapes";
         }
     }
     
@@ -198,20 +232,44 @@ public partial class MainWindow : Window
             Filters = { new FileDialogFilter { Name = "JSON", Extensions = { "json" } } },
             AllowMultiple = false
         };
-        
+    
         var files = await dialog.ShowAsync(this);
         if (files != null && files.Length > 0)
         {
+            var shapes = _serializer.Deserialize(files[0]);
+        
+            // Apply processor after load
+            if (_processingEnabled && _activeProcessor != null)
+                shapes = _activeProcessor.ProcessAfterLoad(shapes);
+        
             _shapes.Clear();
-            var loadedShapes = _serializer.Deserialize(files[0]);
-            foreach (var shape in loadedShapes)
-                _shapes.Add(shape);
-            
-            CurrentShapeInfo.Text = $"Loaded: {_shapes.Count} shapes";
+            foreach (var shape in shapes) _shapes.Add(shape);
+        
+            CurrentShapeInfo.Text = $"Loaded: {shapes.Count} shapes";
             DrawShapes();
         }
     }
+    private void OnSettingsButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var settings = new SettingsWindow(
+            _pluginLoader.Processors.ToList(),
+            _activeProcessor);
     
+        settings.ShowDialog(this).ContinueWith(_ =>
+        {
+            _activeProcessor = settings.SelectedProcessor;
+            _processingEnabled = settings.SelectedProcessor != null;
+            UpdateProcessorStatus();
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+    }
+
+    private void UpdateProcessorStatus()
+    {
+        if (_processingEnabled && _activeProcessor != null)
+            ProcessorStatus.Text = $"Processor: {_activeProcessor.ProcessorName}";
+        else
+            ProcessorStatus.Text = "Processor: None";
+    }
     // Delete selected shape
     private void OnDeleteButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {

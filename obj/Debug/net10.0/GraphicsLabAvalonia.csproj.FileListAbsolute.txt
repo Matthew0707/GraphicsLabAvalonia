@@ -1,3 +1,11 @@
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.csproj.AssemblyReference.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/Avalonia/Resources.Inputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/Avalonia/resources
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.GeneratedMSBuildEditorConfig.editorconfig
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.AssemblyInfoInputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.AssemblyInfo.cs
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.csproj.CoreCompileInputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.sourcelink.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/GraphicsLabAvalonia
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/GraphicsLabAvalonia.deps.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/GraphicsLabAvalonia.runtimeconfig.json
@@ -59,14 +67,6 @@
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/runtimes/win-arm64/native/libSkiaSharp.dll
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/runtimes/win-x64/native/libSkiaSharp.dll
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/bin/Debug/net10.0/runtimes/win-x86/native/libSkiaSharp.dll
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.csproj.AssemblyReference.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/Avalonia/Resources.Inputs.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/Avalonia/resources
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.GeneratedMSBuildEditorConfig.editorconfig
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.AssemblyInfoInputs.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.AssemblyInfo.cs
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.csproj.CoreCompileInputs.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.sourcelink.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/Graphics.EBAD54AF.Up2Date
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/GraphicsLabAvalonia.dll
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/obj/Debug/net10.0/refint/GraphicsLabAvalonia.dll

@@ -1,5 +1,7 @@
 <Solution>
   <Project Path="GraphicsLabAvalonia.csproj" />
   <Project Path="HexagonPlugin/HexagonPlugin.csproj" />
+  <Project Path="ScaleProcessorPlugin/ScaleProcessorPlugin.csproj" />
+  <Project Path="SortProcessorPlugin/SortProcessorPlugin.csproj" />
   <Project Path="StarPlugin/StarPlugin.csproj" />
 </Solution>

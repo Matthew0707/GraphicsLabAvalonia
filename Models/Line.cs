@@ -1,4 +1,4 @@
-
+// GraphicsLabAvalonia/Models/Line.cs
 using System;
 using System.Text.Json;
 using GraphicsLabAvalonia.Serialization;
@@ -10,13 +10,18 @@ public class Line : Shape
     public int X2 { get; set; }
     public int Y2 { get; set; }
 
-    public Line(int x1, int y1, int x2, int y2) : base(x1, y1)
+    public Line() : base() { }
+    
+    public Line(int x, int y, int x2, int y2) : base(x, y)
     {
         X2 = x2;
         Y2 = y2;
     }
     
-    public Line() : base() { }
+    static Line()
+    {
+        JsonShapeSerializer.RegisterType("Line", () => new Line());
+    }
 
     public override void WriteJson(Utf8JsonWriter writer)
     {
@@ -33,14 +38,26 @@ public class Line : Shape
 
     public override void ReadJson(JsonElement element)
     {
-        Id = Guid.Parse(element.GetProperty("Id").GetString());
+        Id = Guid.Parse(element.GetProperty("Id").GetString()!);
         X = element.GetProperty("X").GetInt32();
         Y = element.GetProperty("Y").GetInt32();
         X2 = element.GetProperty("X2").GetInt32();
         Y2 = element.GetProperty("Y2").GetInt32();
-        FillColor = element.GetProperty("FillColor").GetString();
-        StrokeColor = element.GetProperty("StrokeColor").GetString();
+        FillColor = element.GetProperty("FillColor").GetString() ?? "LightBlue";
+        StrokeColor = element.GetProperty("StrokeColor").GetString() ?? "Black";
         StrokeThickness = element.GetProperty("StrokeThickness").GetDouble();
+    }
+
+    public override bool Contains(int px, int py)
+    {
+        double dx = X2 - X;
+        double dy = Y2 - Y;
+        double lenSq = dx * dx + dy * dy;
+        if (lenSq == 0) return Math.Sqrt(Math.Pow(px - X, 2) + Math.Pow(py - Y, 2)) <= 5;
+        double t = Math.Max(0, Math.Min(1, ((px - X) * dx + (py - Y) * dy) / lenSq));
+        double projX = X + t * dx;
+        double projY = Y + t * dy;
+        return Math.Sqrt(Math.Pow(px - projX, 2) + Math.Pow(py - projY, 2)) <= 5;
     }
 
     public override void Resize(int dx, int dy)
@@ -50,27 +67,4 @@ public class Line : Shape
     }
 
     public override string GetDescription() => $"Line ({X},{Y}) -> ({X2},{Y2})";
-    
-    static Line()
-    {
-        JsonShapeSerializer.RegisterType("Line", () => new Line());
-    }
-    
-    public override bool Contains(int x, int y)
-    {
-        double dist = DistanceToLine(x, y, X, Y, X2, Y2);
-        return dist <= 5.0;
-    }
-
-    private double DistanceToLine(int px, int py, int x1, int y1, int x2, int y2)
-    {
-        double dx = x2 - x1;
-        double dy = y2 - y1;
-        double lenSq = dx * dx + dy * dy;
-        if (lenSq == 0) return Math.Sqrt(Math.Pow(px - x1, 2) + Math.Pow(py - y1, 2));
-        double t = Math.Max(0, Math.Min(1, ((px - x1) * dx + (py - y1) * dy) / lenSq));
-        double projX = x1 + t * dx;
-        double projY = y1 + t * dy;
-        return Math.Sqrt(Math.Pow(px - projX, 2) + Math.Pow(py - projY, 2));
-    }
 }

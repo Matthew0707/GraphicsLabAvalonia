@@ -1,3 +1,4 @@
+
 using System;
 using System.Text.Json;
 using Avalonia;
@@ -7,36 +8,36 @@ namespace GraphicsLabAvalonia.Models;
 
 public class Triangle : Shape
 {
-    public double P1X { get; set; }
-    public double P1Y { get; set; }
-    public double P2X { get; set; }
-    public double P2Y { get; set; }
-    public double P3X { get; set; }
-    public double P3Y { get; set; }
+    public int X2 { get; set; }
+    public int Y2 { get; set; }
+    public int X3 { get; set; }
+    public int Y3 { get; set; }
 
-    public Point Point1 => new Point(P1X, P1Y);
-    public Point Point2 => new Point(P2X, P2Y);
-    public Point Point3 => new Point(P3X, P3Y);
-
-    public Triangle(int x1, int y1, int x2, int y2, int x3, int y3) : base(0, 0)
+    public Triangle() : base() { }
+    
+    public Triangle(int x, int y, int x2, int y2, int x3, int y3) : base(x, y)
     {
-        P1X = x1; P1Y = y1;
-        P2X = x2; P2Y = y2;
-        P3X = x3; P3Y = y3;
+        X2 = x2;
+        Y2 = y2;
+        X3 = x3;
+        Y3 = y3;
     }
     
-    public Triangle() : base() { }
+    static Triangle()
+    {
+        JsonShapeSerializer.RegisterType("Triangle", () => new Triangle());
+    }
 
     public override void WriteJson(Utf8JsonWriter writer)
     {
         writer.WriteString("Type", "Triangle");
         writer.WriteString("Id", Id.ToString());
-        writer.WriteNumber("P1X", P1X);
-        writer.WriteNumber("P1Y", P1Y);
-        writer.WriteNumber("P2X", P2X);
-        writer.WriteNumber("P2Y", P2Y);
-        writer.WriteNumber("P3X", P3X);
-        writer.WriteNumber("P3Y", P3Y);
+        writer.WriteNumber("X", X);
+        writer.WriteNumber("Y", Y);
+        writer.WriteNumber("X2", X2);
+        writer.WriteNumber("Y2", Y2);
+        writer.WriteNumber("X3", X3);
+        writer.WriteNumber("Y3", Y3);
         writer.WriteString("FillColor", FillColor);
         writer.WriteString("StrokeColor", StrokeColor);
         writer.WriteNumber("StrokeThickness", StrokeThickness);
@@ -44,49 +45,23 @@ public class Triangle : Shape
 
     public override void ReadJson(JsonElement element)
     {
-        Id = Guid.Parse(element.GetProperty("Id").GetString());
-        P1X = element.GetProperty("P1X").GetDouble();
-        P1Y = element.GetProperty("P1Y").GetDouble();
-        P2X = element.GetProperty("P2X").GetDouble();
-        P2Y = element.GetProperty("P2Y").GetDouble();
-        P3X = element.GetProperty("P3X").GetDouble();
-        P3Y = element.GetProperty("P3Y").GetDouble();
-        FillColor = element.GetProperty("FillColor").GetString();
-        StrokeColor = element.GetProperty("StrokeColor").GetString();
+        Id = Guid.Parse(element.GetProperty("Id").GetString()!);
+        X = element.GetProperty("X").GetInt32();
+        Y = element.GetProperty("Y").GetInt32();
+        X2 = element.GetProperty("X2").GetInt32();
+        Y2 = element.GetProperty("Y2").GetInt32();
+        X3 = element.GetProperty("X3").GetInt32();
+        Y3 = element.GetProperty("Y3").GetInt32();
+        FillColor = element.GetProperty("FillColor").GetString() ?? "LightBlue";
+        StrokeColor = element.GetProperty("StrokeColor").GetString() ?? "Black";
         StrokeThickness = element.GetProperty("StrokeThickness").GetDouble();
     }
 
-    public override void Resize(int dx, int dy)
+    public override bool Contains(int px, int py)
     {
-        double cx = (P1X + P2X + P3X) / 3.0;
-        double cy = (P1Y + P2Y + P3Y) / 3.0;
-        
-        double scaleX = 1.0 + dx / 100.0;
-        double scaleY = 1.0 + dy / 100.0;
-        
-        scaleX = Math.Max(0.1, Math.Min(scaleX, 3.0));
-        scaleY = Math.Max(0.1, Math.Min(scaleY, 3.0));
-        
-        P1X = cx + (P1X - cx) * scaleX;
-        P1Y = cy + (P1Y - cy) * scaleY;
-        P2X = cx + (P2X - cx) * scaleX;
-        P2Y = cy + (P2Y - cy) * scaleY;
-        P3X = cx + (P3X - cx) * scaleX;
-        P3Y = cy + (P3Y - cy) * scaleY;
-    }
-
-    public override string GetDescription() => $"Triangle ({P1X:F0},{P1Y:F0}) ({P2X:F0},{P2Y:F0}) ({P3X:F0},{P3Y:F0})";
-    
-    static Triangle()
-    {
-        JsonShapeSerializer.RegisterType("Triangle", () => new Triangle());
-    }
-    
-    public override bool Contains(int x, int y)
-    {
-        double d1 = Sign(x, y, P1X, P1Y, P2X, P2Y);
-        double d2 = Sign(x, y, P2X, P2Y, P3X, P3Y);
-        double d3 = Sign(x, y, P3X, P3Y, P1X, P1Y);
+        double d1 = Sign(px, py, X, Y, X2, Y2);
+        double d2 = Sign(px, py, X2, Y2, X3, Y3);
+        double d3 = Sign(px, py, X3, Y3, X, Y);
         bool hasNeg = (d1 < 0) || (d2 < 0) || (d3 < 0);
         bool hasPos = (d1 > 0) || (d2 > 0) || (d3 > 0);
         return !(hasNeg && hasPos);
@@ -96,4 +71,14 @@ public class Triangle : Shape
     {
         return (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3);
     }
+
+    public override void Resize(int dx, int dy)
+    {
+        X2 += dx;
+        Y2 += dy;
+        X3 += dx;
+        Y3 += dy;
+    }
+
+    public override string GetDescription() => $"Triangle ({X},{Y})-({X2},{Y2})-({X3},{Y3})";
 }
