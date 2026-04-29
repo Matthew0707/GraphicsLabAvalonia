@@ -5,6 +5,7 @@
       <map>
         <entry key="App.axaml" value="GraphicsLabAvalonia.csproj" />
         <entry key="Views/MainWindow.axaml" value="GraphicsLabAvalonia.csproj" />
+        <entry key="Views/SettingsWindow.xaml" value="GraphicsLabAvalonia.csproj" />
       </map>
     </option>
   </component>
