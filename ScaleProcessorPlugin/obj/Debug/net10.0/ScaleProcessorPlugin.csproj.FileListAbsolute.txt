@@ -1,8 +1,3 @@
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.GeneratedMSBuildEditorConfig.editorconfig
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.AssemblyInfoInputs.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.AssemblyInfo.cs
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.csproj.CoreCompileInputs.cache
-/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.sourcelink.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/bin/Debug/net10.0/GraphicsLabAvalonia.deps.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/bin/Debug/net10.0/GraphicsLabAvalonia.runtimeconfig.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/bin/Debug/net10.0/GraphicsLabAvalonia
@@ -13,6 +8,11 @@
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/bin/Debug/net10.0/GraphicsLabAvalonia.pdb
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.csproj.AssemblyReference.cache
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/Avalonia/Resources.Inputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.GeneratedMSBuildEditorConfig.editorconfig
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.AssemblyInfoInputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.AssemblyInfo.cs
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.csproj.CoreCompileInputs.cache
+/Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.sourcelink.json
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScalePro.0FCB17C0.Up2Date
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/ScaleProcessorPlugin.dll
 /Users/matvejbernat/RiderProjects/GraphicsLabAvalonia/ScaleProcessorPlugin/obj/Debug/net10.0/refint/ScaleProcessorPlugin.dll

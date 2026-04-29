@@ -39,5 +39,22 @@
     <Compile Remove="ScaleProcessorPlugin\**" />
     <None Remove="SortProcessorPlugin\**" />
     <None Remove="ScaleProcessorPlugin\**" />
+    
+  </ItemGroup>
+  <ItemGroup>
+   
+    <Compile Remove="SortProcessorPlugin\**" />
+    <Compile Remove="ScaleProcessorPlugin\**" />
+    <Compile Remove="HexagonPlugin\**" />
+    <Compile Remove="StarPlugin\**" />
+    
+    <None Remove="SortProcessorPlugin\**" />
+    <None Remove="ScaleProcessorPlugin\**" />
+    <None Remove="HexagonPlugin\**" />
+    <None Remove="StarPlugin\**" />
+    <Compile Remove="ShapeCounterPlugin\**" />
+    <Compile Remove="ShapeCounterAdapter\**" />
+    <None Remove="ShapeCounterPlugin\**" />
+    <None Remove="ShapeCounterAdapter\**" />
   </ItemGroup>
 </Project>

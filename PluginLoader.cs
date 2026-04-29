@@ -11,21 +11,44 @@ using GraphicsLabAvalonia.Serialization;
 namespace GraphicsLabAvalonia;
 
 /// <summary>
+/// Singleton plugin loader - only ONE instance per application.
 /// Dynamically loads shape plugins from .dll files in the Plugins folder.
-/// Base application code NEVER changes when adding new plugins.
 /// </summary>
 public class PluginLoader
 {
+    
+    private static PluginLoader _instance;
+    private static readonly object _lock = new();
+
+    /// <summary>
+    /// Returns the single instance of PluginLoader (thread-safe).
+    /// </summary>
+    public static PluginLoader Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                lock (_lock)
+                {
+                    _instance ??= new PluginLoader();
+                }
+            }
+            return _instance;
+        }
+    }
+    
+
     private readonly string _pluginsPath;
     private readonly List<IDataProcessor> _loadedProcessors = new();
     public IReadOnlyList<IDataProcessor> Processors => _loadedProcessors;
-    public PluginLoader()
+
+    // Private constructor - only Instance can create
+    private PluginLoader()
     {
-        // Plugins folder is next to the executable
         _pluginsPath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, "Plugins");
         
-        // Create folder if it doesn't exist
         if (!Directory.Exists(_pluginsPath))
             Directory.CreateDirectory(_pluginsPath);
     }

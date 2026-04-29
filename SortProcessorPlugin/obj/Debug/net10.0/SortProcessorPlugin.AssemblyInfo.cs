@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SortProcessorPlugin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a8c1d80dd9562cc6a56b90db1b663454410d8400")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48e62feadca24e6fcedab846a9219db4843c5fe1")]
 [assembly: System.Reflection.AssemblyProductAttribute("SortProcessorPlugin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SortProcessorPlugin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -70,6 +70,9 @@
                                TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
+            <Button x:Name="StatsButton" Content="Статистика"
+                    Background="#007acc" Foreground="White"
+                    Click="OnStatsButtonClick" Margin="5,10,5,0"/>
         </StackPanel>
         
         <!-- Drawing Area -->

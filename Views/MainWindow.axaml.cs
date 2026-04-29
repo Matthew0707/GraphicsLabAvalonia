@@ -8,10 +8,12 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
+using GraphicsLabAvalonia.Commands;
 using GraphicsLabAvalonia.Factories;
 using GraphicsLabAvalonia.Models;
 using GraphicsLabAvalonia.Rendering;
 using GraphicsLabAvalonia.Serialization;
+
 
 namespace GraphicsLabAvalonia.Views;
 
@@ -38,6 +40,11 @@ public partial class MainWindow : Window
     private Shape _selectedShape;
     private bool _isDragging;
     
+    
+    private ClearCommand _clearCommand;
+    private DeleteCommand _deleteCommand;
+    
+    
     public MainWindow()
     {
         InitializeComponent();
@@ -47,8 +54,10 @@ public partial class MainWindow : Window
         _renderManager = new RenderManager();
         _serializer = new JsonShapeSerializer();
         
+        _clearCommand = new ClearCommand(_shapes);
+        _deleteCommand = new DeleteCommand(_shapes);
         
-        _pluginLoader = new PluginLoader();
+        _pluginLoader = PluginLoader.Instance;
         _pluginLoader.LoadAll(_factoryManager, _renderManager, _serializer);
         _pluginLoader.LoadProcessors();
         var assembly = Assembly.GetExecutingAssembly();
@@ -220,6 +229,7 @@ public partial class MainWindow : Window
         
             _serializer.Serialize(path, shapes);
             CurrentShapeInfo.Text = $"Saved: {shapes.Count} shapes";
+            UpdateProcessorStatus();
         }
     }
     
@@ -247,6 +257,7 @@ public partial class MainWindow : Window
         
             CurrentShapeInfo.Text = $"Loaded: {shapes.Count} shapes";
             DrawShapes();
+            UpdateProcessorStatus();
         }
     }
     private void OnSettingsButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -266,26 +277,42 @@ public partial class MainWindow : Window
     private void UpdateProcessorStatus()
     {
         if (_processingEnabled && _activeProcessor != null)
-            ProcessorStatus.Text = $"Processor: {_activeProcessor.ProcessorName}";
+        {
+            ProcessorStatus.Text = $"Процессор: {_activeProcessor.ProcessorName}";
+    
+            
+            var adapterType = _activeProcessor.GetType();
+            if (adapterType.Name == "ShapeCounterAdapter")
+            {
+                var lastResultProp = adapterType.GetProperty("LastResult");
+                if (lastResultProp != null)
+                {
+                    var result = lastResultProp.GetValue(_activeProcessor) as string;
+                    if (!string.IsNullOrEmpty(result))
+                        CurrentShapeInfo.Text = result.Replace("\n", " | ");
+                }
+            }
+        }
         else
-            ProcessorStatus.Text = "Processor: None";
+        {
+            ProcessorStatus.Text = "Процессор: отключен";
+        }
     }
     // Delete selected shape
     private void OnDeleteButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        if (_selectedShape != null)
-        {
-            _shapes.Remove(_selectedShape);
-            _selectedShape = null;
-            CurrentShapeInfo.Text = "Deleted";
-            DrawShapes();
-        }
+        _deleteCommand.SetSelectedShape(_selectedShape);
+        _deleteCommand.Execute();
+        _selectedShape = null;
+        CurrentShapeInfo.Text = "Deleted";
+        DrawShapes();
     }
+
     
     // Clear canvas
     private void OnClearButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        _shapes.Clear();
+        _clearCommand.Execute();
         _selectedShape = null;
         CurrentShapeInfo.Text = "Cleared";
         DrawShapes();
@@ -381,5 +408,42 @@ public partial class MainWindow : Window
         }
     
         ctx.DrawRectangle(null, pen, new Rect(x, y, w, h));
+    }
+    
+    private void OnStatsButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var shapes = _shapes.GetAllShapes().ToList();
+    
+        if (_processingEnabled && _activeProcessor != null)
+        {
+            
+            var adapterType = _activeProcessor.GetType();
+            if (adapterType.Name == "ShapeCounterAdapter")
+            {
+                
+                _activeProcessor.ProcessBeforeSave(shapes);
+            
+                var lastResultProp = adapterType.GetProperty("LastResult");
+                if (lastResultProp != null)
+                {
+                    var result = lastResultProp.GetValue(_activeProcessor) as string;
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        CurrentShapeInfo.Text = result.Replace("\n", " | ");
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                CurrentShapeInfo.Text = "Выберите плагин 'Счётчик фигур'";
+                return;
+            }
+        }
+    
+        
+        var stats = shapes.GroupBy(s => s.GetType().Name)
+            .Select(g => $"{g.Key}: {g.Count()}");
+        CurrentShapeInfo.Text = $"Всего: {shapes.Count} | {string.Join(" | ", stats)}";
     }
 }
