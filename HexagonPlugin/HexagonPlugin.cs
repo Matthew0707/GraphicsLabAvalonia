@@ -24,7 +24,7 @@ public class HexagonPlugin : IShapePlugin
     public string GetShapeTypeName() => "Hexagon";
 }
 
-// ==================== SHAPE CLASS ====================
+
 public class HexagonShape : Shape
 {
     public int Radius { get; set; }
@@ -84,7 +84,7 @@ public class HexagonShape : Shape
     public override string GetDescription() => $"Hexagon (X:{X}, Y:{Y}, R:{Radius})";
 }
 
-// ==================== FACTORY ====================
+
 public class HexagonFactory : IShapeFactory
 {
     public string ShapeTypeName => "Hexagon";
@@ -112,7 +112,7 @@ public class HexagonFactory : IShapeFactory
 }
 }
 
-// ==================== RENDERER ====================
+
 public class HexagonRenderer : IShapeRenderer
 {
     public bool CanRender(Shape s) => s is HexagonShape;

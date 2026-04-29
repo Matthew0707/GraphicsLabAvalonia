@@ -1,4 +1,4 @@
-// GraphicsLabAvalonia/Models/Line.cs
+
 using System;
 using System.Text.Json;
 using GraphicsLabAvalonia.Serialization;

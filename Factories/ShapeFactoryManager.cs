@@ -24,7 +24,7 @@ public class ShapeFactoryManager
     
     /// <summary>
     /// Automatically finds all IShapeFactory implementations in the assembly
-    /// No manual registration needed when adding new shapes!
+    /// No manual registration needed when adding new shapes
     /// </summary>
     private void AutoDiscoverFactories()
     {
@@ -54,7 +54,7 @@ public class ShapeFactoryManager
     }
     
     /// <summary>
-    /// Register a factory (kept for manual registration if needed)
+    /// Register a factory 
     /// </summary>
     public void RegisterFactory(IShapeFactory factory)
     {

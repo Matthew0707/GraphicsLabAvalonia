@@ -23,7 +23,7 @@ public class StarPlugin : IShapePlugin
     public string GetShapeTypeName() => "Star";
 }
 
-// ==================== SHAPE CLASS ====================
+
 public class StarShape : Shape
 {
     public int OuterRadius { get; set; }
@@ -86,7 +86,7 @@ public class StarShape : Shape
     public override string GetDescription() => $"Star (X:{X}, Y:{Y}, R:{OuterRadius})";
 }
 
-// ==================== FACTORY ====================
+
 public class StarFactory : IShapeFactory
 {
     public string ShapeTypeName => "Star";
@@ -113,7 +113,7 @@ public class StarFactory : IShapeFactory
 }
 }
 
-// ==================== RENDERER ====================
+
 public class StarRenderer : IShapeRenderer
 {
     public bool CanRender(Shape s) => s is StarShape;

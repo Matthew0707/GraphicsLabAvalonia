@@ -25,7 +25,7 @@ public class RenderManager
     
     /// <summary>
     /// Automatically finds all IShapeRenderer implementations in the assembly
-    /// and registers them. No manual registration needed when adding new shapes!
+    /// and registers them. No manual registration needed when adding new shapes
     /// </summary>
     private void AutoDiscoverRenderers()
     {
