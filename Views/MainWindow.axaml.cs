@@ -212,7 +212,7 @@ public partial class MainWindow : Window
         {
             var shapes = _shapes.GetAllShapes().ToList();
         
-            // DEBUG
+            
             System.Diagnostics.Debug.WriteLine($"Processor enabled: {_processingEnabled}");
             System.Diagnostics.Debug.WriteLine($"Active processor: {_activeProcessor?.ProcessorName ?? "NULL"}");
         
@@ -412,38 +412,22 @@ public partial class MainWindow : Window
     
     private void OnStatsButtonClick(object sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var shapes = _shapes.GetAllShapes().ToList();
-    
-        if (_processingEnabled && _activeProcessor != null)
+        // Check if counter adapter is active
+        if (_activeProcessor == null || _activeProcessor.GetType().Name != "ShapeCounterAdapter")
         {
-            
-            var adapterType = _activeProcessor.GetType();
-            if (adapterType.Name == "ShapeCounterAdapter")
-            {
-                
-                _activeProcessor.ProcessBeforeSave(shapes);
-            
-                var lastResultProp = adapterType.GetProperty("LastResult");
-                if (lastResultProp != null)
-                {
-                    var result = lastResultProp.GetValue(_activeProcessor) as string;
-                    if (!string.IsNullOrEmpty(result))
-                    {
-                        CurrentShapeInfo.Text = result.Replace("\n", " | ");
-                        return;
-                    }
-                }
-            }
-            else
-            {
-                CurrentShapeInfo.Text = "Выберите плагин 'Счётчик фигур'";
-                return;
-            }
+            CurrentShapeInfo.Text = "Выберите плагин 'Счётчик фигур' в настройках";
+            return;
         }
     
-        
-        var stats = shapes.GroupBy(s => s.GetType().Name)
-            .Select(g => $"{g.Key}: {g.Count()}");
-        CurrentShapeInfo.Text = $"Всего: {shapes.Count} | {string.Join(" | ", stats)}";
+        var shapes = _shapes.GetAllShapes().ToList();
+        _activeProcessor.ProcessBeforeSave(shapes);
+    
+        var lastResultProp = _activeProcessor.GetType().GetProperty("LastResult");
+        if (lastResultProp != null)
+        {
+            var result = lastResultProp.GetValue(_activeProcessor) as string;
+            if (!string.IsNullOrEmpty(result))
+                CurrentShapeInfo.Text = result.Replace("\n", " | ");
+        }
     }
 }

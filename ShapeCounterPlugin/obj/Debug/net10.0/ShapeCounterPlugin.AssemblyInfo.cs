@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShapeCounterPlugin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+48e62feadca24e6fcedab846a9219db4843c5fe1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e814b932e41a5c6f67c1979d809920449dbb5a74")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShapeCounterPlugin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShapeCounterPlugin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
