@@ -137,13 +137,13 @@ public class PluginLoader
         // Create plugin instance
         var plugin = (IShapePlugin)Activator.CreateInstance(pluginType);
 
-        // Register factory → shape appears in UI list
+        // Register factory => shape appears in UI list
         factoryMgr.RegisterFactory(plugin.GetFactory());
 
-        // Register renderer → shape can be drawn
+        // Register renderer => shape can be drawn
         renderMgr.RegisterRenderer(plugin.GetRenderer());
 
-        // Register in serializer → shape can be saved/loaded
+        // Register in serializer => shape can be saved/loaded
         JsonShapeSerializer.RegisterType(
             plugin.GetShapeTypeName(), 
             plugin.GetShapeFactory());

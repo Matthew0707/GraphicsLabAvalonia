@@ -1,4 +1,5 @@
 
+using System;
 using Avalonia;
 using Avalonia.Media;
 using GraphicsLabAvalonia.Models;
@@ -17,7 +18,7 @@ public class EllipseRenderer : IShapeRenderer
     {
         var ellipse = shape as Ellipse;
         if (ellipse == null) return;
-
+        
         var pen = new Pen(Brushes.Black, 2);
         var rect = new Rect(ellipse.X, ellipse.Y, ellipse.Width, ellipse.Height);
         

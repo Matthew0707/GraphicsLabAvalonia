@@ -3,7 +3,6 @@
   <Project Path="HexagonPlugin/HexagonPlugin.csproj" />
   <Project Path="ScaleProcessorPlugin/ScaleProcessorPlugin.csproj" />
   <Project Path="ShapeCounterAdapter/ShapeCounterAdapter.csproj" />
-  <Project Path="ShapeCounterPlugin/ShapeCounterPlugin.csproj" />
   <Project Path="SortProcessorPlugin/SortProcessorPlugin.csproj" />
   <Project Path="StarPlugin/StarPlugin.csproj" />
 </Solution>
